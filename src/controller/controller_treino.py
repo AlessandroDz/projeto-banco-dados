@@ -1,42 +1,31 @@
-from conexion import get_connection
-from model.treino import Treino
+from connection import get_connection
+from models.treino import Treino
 
 class TreinoController:
     @staticmethod
     def listar_todos():
+        conn = get_connection()
         treinos = []
-        try:
-            conn = get_connection()
-            with conn.cursor() as cur:
-                cur.execute("""
-                    SELECT ID_TREINO, ID_ALUNO, ID_INSTRUTOR, TIPO, HORARIO, DIAS_SEMANA, FREQUENCIA
-                    FROM TREINO
-                """)
-                for row in cur:
-                    treinos.append(Treino(*row))
-        except Exception as e:
-            print(f"Erro ao listar treinos: {e}")
-        finally:
-            if conn:
-                conn.close()
+        if conn:
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM LABDATABASE.TREINO")
+            for row in cur:
+                treinos.append(Treino(*row))
+            cur.close()
+            conn.close()
         return treinos
 
     @staticmethod
     def inserir(id_aluno, id_instrutor, tipo, horario, dias_semana, frequencia):
-        try:
-            conn = get_connection()
-            with conn.cursor() as cur:
-                cur.execute("""
-                    INSERT INTO TREINO 
-                    (ID_TREINO, ID_ALUNO, ID_INSTRUTOR, TIPO, HORARIO, DIAS_SEMANA, FREQUENCIA)
-                    VALUES (TREINO_ID_SEQ.NEXTVAL, :1, :2, :3, :4, :5, :6)
-                """, (id_aluno, id_instrutor, tipo, horario, dias_semana, frequencia))
-                conn.commit()
+        conn = get_connection()
+        if conn:
+            cur = conn.cursor()
+            cur.execute("""
+                INSERT INTO LABDATABASE.TREINO 
+                (ID_TREINO, ID_ALUNO, ID_INSTRUTOR, TIPO, HORARIO, DIAS_SEMANA, FREQUENCIA)
+                VALUES (LABDATABASE.TREINO_ID_SEQ.NEXTVAL, :1, :2, :3, :4, :5, :6)
+            """, (id_aluno, id_instrutor, tipo, horario, dias_semana, frequencia))
+            conn.commit()
+            cur.close()
+            conn.close()
             print("Treino inserido com sucesso!")
-            return True
-        except Exception as e:
-            print(f"Erro ao inserir treino: {e}")
-            return False
-        finally:
-            if conn:
-                conn.close()
