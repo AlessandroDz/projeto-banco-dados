@@ -3,8 +3,8 @@ import oracledb
 # === CONFIGURAÇÃO DA CONEXÃO ===
 # Altere conforme seu ambiente Oracle
 conexao = oracledb.connect(
-    user="SEU_USUARIO",
-    password="SUA_SENHA",
+    user="LabDatabase",
+    password="lab@Database2025",
     dsn="localhost/XEPDB1"  #  DSN Oracle XE
 )
 
