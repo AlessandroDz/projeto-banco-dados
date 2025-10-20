@@ -1,4 +1,4 @@
-import cx_Oracle
+"""import cx_Oracle
 
 def get_connection():
     try:
@@ -11,3 +11,4 @@ def get_connection():
     except cx_Oracle.Error as error:
         print("Erro ao conectar ao banco de dados:", error)
         return None
+"""
