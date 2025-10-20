@@ -1,5 +1,5 @@
-from connection import get_connection
-from models.treino import Treino
+from conexion import get_connection
+from model.treino import Treino
 
 class TreinoController:
     @staticmethod
