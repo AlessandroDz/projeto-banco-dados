@@ -1,0 +1,130 @@
+import java.sql.Date;
+import java.util.List;
+import java.util.Scanner;
+
+public class MenuPrincipal {
+    private final Scanner sc = new Scanner(System.in);
+
+    public void start() {
+        boolean running = true;
+        while (running) {
+            System.out.println("\n===============================\n     SISTEMA ACADEMIA LABFIT\n===============================");
+            System.out.println("[1] Relatórios");
+            System.out.println("[2] Inserir registros");
+            System.out.println("[3] Remover registros");
+            System.out.println("[4] Atualizar registros");
+            System.out.println("[5] Sair");
+            System.out.print("Escolha uma opção: ");
+            String opt = sc.nextLine().trim();
+            switch (opt) {
+                case "1": reports(); break;
+                case "2": insertMenu(); break;
+                case "3": deleteMenu(); break;
+                case "4": updateMenu(); break;
+                case "5": running = false; break;
+                default: System.out.println("Opção inválida."); break;
+            }
+        }
+        System.out.println("Até mais!"); 
+    }
+
+    private void reports() {
+        System.out.println("\n--- Alunos ---");
+        List<Aluno> alunos = AlunoController.listarTodos();
+        for (Aluno a : alunos) System.out.println(a);
+
+        System.out.println("\n--- Instrutores ---");
+        List<Instrutor> instrutores = InstrutorController.listarTodos();
+        for (Instrutor i : instrutores) System.out.println(i);
+
+        System.out.println("\n--- Treinos ---");
+        List<Treino> treinos = TreinoController.listarTodos();
+        for (Treino t : treinos) System.out.println(t);
+    }
+
+    private void insertMenu() {
+        System.out.println("Escolha o tipo para inserir: [1] Aluno [2] Instrutor [3] Treino");
+        String t = sc.nextLine().trim();
+        try {
+            if (t.equals("1")) {
+                System.out.print("Nome: "); String nome = sc.nextLine();
+                System.out.print("CPF: "); String cpf = sc.nextLine();
+                System.out.print("Data Nascimento (YYYY-MM-DD): "); Date dt = Date.valueOf(sc.nextLine());
+                System.out.print("Telefone: "); String tel = sc.nextLine();
+                AlunoController.inserir(nome, cpf, dt, tel);
+            } else if (t.equals("2")) {
+                System.out.print("Nome: "); String nome = sc.nextLine();
+                System.out.print("Especialidade: "); String esp = sc.nextLine();
+                System.out.print("Telefone: "); String tel = sc.nextLine();
+                System.out.print("Email: "); String email = sc.nextLine();
+                InstrutorController.inserir(nome, esp, tel, email);
+            } else if (t.equals("3")) {
+                System.out.print("ID Aluno: "); int idAluno = Integer.parseInt(sc.nextLine());
+                System.out.print("ID Instrutor: "); int idInstrutor = Integer.parseInt(sc.nextLine());
+                System.out.print("Tipo: "); String tipo = sc.nextLine();
+                System.out.print("Horario: "); String horario = sc.nextLine();
+                System.out.print("Dias Semana: "); String dias = sc.nextLine();
+                System.out.print("Frequencia (numero): "); int freq = Integer.parseInt(sc.nextLine());
+                TreinoController.inserir(idAluno, idInstrutor, tipo, horario, dias, freq);
+            } else {
+                System.out.println("Tipo inválido."); 
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao inserir: " + e.getMessage());
+        }
+    }
+
+    private void deleteMenu() {
+        System.out.println("Escolha o tipo para remover: [1] Aluno [2] Instrutor [3] Treino");
+        String t = sc.nextLine().trim();
+        try {
+            System.out.print("ID: "); int id = Integer.parseInt(sc.nextLine());
+            if (t.equals("1")) AlunoController.deletar(id);
+            else if (t.equals("2")) InstrutorController.deletar(id);
+            else if (t.equals("3")) TreinoController.deletar(id);
+            else System.out.println("Tipo inválido.");
+        } catch (Exception e) {
+            System.err.println("Erro ao deletar: " + e.getMessage());
+        }
+    }
+
+    private void updateMenu() {
+        System.out.println("Escolha o tipo para atualizar: [1] Aluno [2] Instrutor [3] Treino");
+        String t = sc.nextLine().trim();
+        try {
+            System.out.print("ID: "); int id = Integer.parseInt(sc.nextLine());
+            if (t.equals("1")) {
+                Aluno a = AlunoController.buscarPorId(id);
+                if (a == null) { System.out.println("Aluno não encontrado."); return; }
+                System.out.print("Nome (atual: " + a.getNome() + "): "); String nome = sc.nextLine(); if (nome.isEmpty()) nome = a.getNome();
+                System.out.print("CPF (atual: " + a.getCpf() + "): "); String cpf = sc.nextLine(); if (cpf.isEmpty()) cpf = a.getCpf();
+                System.out.print("Data Nasc (YYYY-MM-DD) (atual: " + a.getDataNascimento() + "): "); String dtStr = sc.nextLine(); Date dt = dtStr.isEmpty() ? a.getDataNascimento() : Date.valueOf(dtStr);
+                System.out.print("Telefone (atual: " + a.getTelefone() + "): "); String tel = sc.nextLine(); if (tel.isEmpty()) tel = a.getTelefone();
+                AlunoController.atualizar(id, nome, cpf, dt, tel);
+            } else if (t.equals("2")) {
+                Instrutor i = InstrutorController.buscarPorId(id);
+                if (i == null) { System.out.println("Instrutor não encontrado."); return; }
+                System.out.print("Nome (atual: " + i.getNome() + "): "); String nome = sc.nextLine(); if (nome.isEmpty()) nome = i.getNome();
+                System.out.print("Especialidade (atual: " + i.getEspecialidade() + "): "); String esp = sc.nextLine(); if (esp.isEmpty()) esp = i.getEspecialidade();
+                System.out.print("Telefone (atual: " + i.getTelefone() + "): "); String tel = sc.nextLine(); if (tel.isEmpty()) tel = i.getTelefone();
+                System.out.print("Email (atual: " + i.getEmail() + "): "); String email = sc.nextLine(); if (email.isEmpty()) email = i.getEmail();
+                InstrutorController.atualizar(id, nome, esp, tel, email);
+            } else if (t.equals("3")) {
+                TreinoController tObj = null;
+                // buscamos treino via listagem simples
+                System.out.println("(Será preciso checar os dados manualmente antes de alterar.)");
+                System.out.print("Novo ID Aluno: "); int idAluno = Integer.parseInt(sc.nextLine());
+                System.out.print("Novo ID Instrutor: "); int idInstrutor = Integer.parseInt(sc.nextLine());
+                System.out.print("Tipo: "); String tipo = sc.nextLine();
+                System.out.print("Horario: "); String horario = sc.nextLine();
+                System.out.print("Dias Semana: "); String dias = sc.nextLine();
+                System.out.print("Frequencia: "); int freq = Integer.parseInt(sc.nextLine());
+                TreinoController.atualizar(id, idAluno, idInstrutor, tipo, horario, dias, freq);
+            } else {
+                System.out.println("Tipo inválido."); 
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao atualizar: " + e.getMessage());
+        }
+    }
+}

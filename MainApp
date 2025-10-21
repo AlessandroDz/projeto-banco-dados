@@ -1,0 +1,16 @@
+import javax.swing.SwingUtilities;
+
+public class MainApp {
+    public static void main(String[] args) {
+        // Mostra splash (tempo em ms) e logo em seguida abre o menu console
+        SwingUtilities.invokeLater(() -> {
+            new view.SplashScreen(1200);
+        });
+
+        // Pequena pausa para garantir que splash seja exibida antes do menu console
+        try { Thread.sleep(1400); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+
+        MenuPrincipal menu = new MenuPrincipal();
+        menu.start();
+    }
+}

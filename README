@@ -1,0 +1,24 @@
+Academia - Java + MySQL (Console + Splash)
+-----------------------------------------
+Conteúdo:
+- schema_academia.sql : script para criar o banco 'academia' e popular com dados.
+- src/                : código Java (models, controllers, view, main)
+
+Preparação:
+1) Instale o MySQL e crie um usuário com as credenciais abaixo (ou use as existentes):
+   Usuário: lab@dataBase
+   Senha:   lab@dataBase2025
+2) Execute o script 'schema_academia.sql' no MySQL Workbench ou CLI para criar as tabelas e inserir os registros.
+3) Baixe o conector JDBC (mysql-connector-java-8.x.x.jar) e coloque no classpath.
+
+Compilação (exemplo no Windows PowerShell ou Linux com javac):
+- Vá para a pasta src/ (onde estão os arquivos .java).
+- Compile:
+  javac -cp ".;path/to/mysql-connector-java-8.x.x.jar" *.java model/*.java controller/*.java view/*.java
+
+Execução:
+java -cp ".;path/to/mysql-connector-java-8.x.x.jar" MainApp
+
+Observações:
+- Ajuste a URL/usuário/senha se seu MySQL estiver em outro host ou portar.
+- Caso ocorra erro de timezone, adicione "?serverTimezone=UTC" na URL do JDBC (já incluso no ConnectionFactory).
